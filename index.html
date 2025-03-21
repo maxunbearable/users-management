@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html ng-app="userApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"></script>
+  <script src="app.js"></script>
+  <script src="services.js"></script>
+  <script src="directives.js"></script>
+  <script src="controllers/user.controller.js"></script>
+  <script src="controllers/user-view.controller.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="header__container">
+      <h1 class="header__title">User Management</h1>
+      <nav class="nav">
+        <ul class="nav__list">
+          <li class="nav__item"><a ui-sref="users" class="nav__link">Users</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="main__container">
+      <div ui-view></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__container">
+      <p class="footer__text">User Management System - AngularJS</p>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

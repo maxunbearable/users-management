@@ -1,0 +1,32 @@
+<div class="user-view">
+  <div class="user-view__header">
+    <h2 class="user-view__title">User Details</h2>
+  </div>
+  <div class="user-view__info">
+    <p>
+      <span class="user-view__label">Username:</span>
+      <span class="user-view__value">{{user.username}}</span>
+    </p>
+    <p>
+      <span class="user-view__label">First Name:</span>
+      <span class="user-view__value">{{user.first_name}}</span>
+    </p>
+    <p>
+      <span class="user-view__label">Last Name:</span>
+      <span class="user-view__value">{{user.last_name}}</span>
+    </p>
+    <p>
+      <span class="user-view__label">Email:</span>
+      <span class="user-view__value">{{user.email}}</span>
+    </p>
+    <p>
+      <span class="user-view__label">User Type:</span>
+      <span class="user-view__value">{{user.user_type}}</span>
+    </p>
+  </div>
+  <div class="user-view__actions">
+    <a ui-sref="users({editId: user.id})" class="btn btn--primary">Edit</a>
+    <button ng-click="deleteUser()" class="btn btn--danger">Delete</button>
+    <a ui-sref="users" class="btn btn--secondary">Back to List</a>
+  </div>
+</div>

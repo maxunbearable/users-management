@@ -1,0 +1,184 @@
+<div class="user-list">
+  <div class="user-list__header">
+    <h2 class="user-list__title">User Management</h2>
+    <button ng-click="openCreateModal()" class="btn btn--primary">Create User</button>
+  </div>
+
+  <table class="user-table" ng-if="users.length > 0">
+    <thead class="user-table__head">
+    <tr>
+      <th class="user-table__header">USERNAME</th>
+      <th class="user-table__header">FIRST NAME</th>
+      <th class="user-table__header">LAST NAME</th>
+      <th class="user-table__header">EMAIL</th>
+      <th class="user-table__header">TYPE</th>
+      <th class="user-table__header">ACTIONS</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="user-table__row" ng-repeat="user in users">
+      <td class="user-table__cell"><a ui-sref="view({id: user.id})">{{user.username}}</a></td>
+      <td class="user-table__cell">{{user.first_name}}</td>
+      <td class="user-table__cell">{{user.last_name}}</td>
+      <td class="user-table__cell">{{user.email}}</td>
+      <td class="user-table__cell">{{user.user_type}}</td>
+      <td class="user-table__cell user-table__cell--actions">
+        <button class="btn btn--primary" ng-click="openEditModal(user.id)">Edit</button>
+        <button class="btn btn--danger" ng-click="deleteUser(user.id)">Delete</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div ng-if="users.length === 0">
+    <p>No users found. Click "Create User" to create one.</p>
+  </div>
+
+  <div class="modal-overlay" ng-if="showModal"></div>
+  <div class="user-form" ng-if="showModal">
+    <div class="user-form__header">
+      <h2 class="user-form__title">{{modalTitle}}</h2>
+      <button class="user-form__close" ng-click="closeModal()">×</button>
+    </div>
+    <div class="user-form__server-error" ng-if="serverErrors">
+      <div ng-repeat="(field, errors) in serverErrors">
+        <p ng-repeat="error in errors">{{field}}: {{error}}</p>
+      </div>
+    </div>
+    <form name="userForm" ng-submit="userForm.$valid && saveUser()" novalidate>
+      <div class="user-form__group">
+        <label for="username" class="user-form__label">Username*</label>
+        <div class="position-relative">
+          <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  class="user-form__input"
+                  ng-class="{'input-error': userForm.username.$invalid && userForm.username.$touched}"
+                  ng-model="user.username"
+                  required
+                  user-form-validation>
+          <i class="error-icon" ng-if="userForm.username.$invalid && userForm.username.$touched">!</i>
+        </div>
+        <div class="error-message" ng-if="userForm.username.$touched && userForm.username.$invalid">
+          Username is required
+        </div>
+      </div>
+      <div class="user-form__group">
+        <label for="first_name" class="user-form__label">First name*</label>
+        <div class="position-relative">
+          <input
+                  type="text"
+                  id="first_name"
+                  name="first_name"
+                  class="user-form__input"
+                  ng-class="{'input-error': userForm.first_name.$invalid && userForm.first_name.$touched}"
+                  ng-model="user.first_name"
+                  required
+                  user-form-validation>
+          <i class="error-icon" ng-if="userForm.first_name.$invalid && userForm.first_name.$touched">!</i>
+        </div>
+        <div class="error-message" ng-if="userForm.first_name.$touched && userForm.first_name.$invalid">
+          First name is required
+        </div>
+      </div>
+      <div class="user-form__group">
+        <label for="last_name" class="user-form__label">Last name*</label>
+        <div class="position-relative">
+          <input
+                  type="text"
+                  id="last_name"
+                  name="last_name"
+                  class="user-form__input"
+                  ng-class="{'input-error': userForm.last_name.$invalid && userForm.last_name.$touched}"
+                  ng-model="user.last_name"
+                  required
+                  user-form-validation>
+          <i class="error-icon" ng-if="userForm.last_name.$invalid && userForm.last_name.$touched">!</i>
+        </div>
+        <div class="error-message" ng-if="userForm.last_name.$touched && userForm.last_name.$invalid">
+          Last name is required
+        </div>
+      </div>
+      <div class="user-form__group">
+        <label for="email" class="user-form__label">Email*</label>
+        <div class="position-relative">
+          <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="user-form__input"
+                  ng-class="{'input-error': userForm.email.$invalid && userForm.email.$touched}"
+                  ng-model="user.email"
+                  required
+                  user-form-validation>
+          <i class="error-icon" ng-if="userForm.email.$invalid && userForm.email.$touched">!</i>
+        </div>
+        <div class="error-message" ng-if="userForm.email.$touched && userForm.email.$invalid">
+          Please enter a valid email address
+        </div>
+      </div>
+      <div class="user-form__group">
+        <label for="user_type" class="user-form__label">Type*</label>
+        <select
+                id="user_type"
+                name="user_type"
+                class="user-form__select"
+                ng-model="user.user_type"
+                required>
+          <option value="Admin">Administrator</option>
+          <option value="Driver">Driver</option>
+        </select>
+        <div class="error-message" ng-if="userForm.user_type.$touched && userForm.user_type.$invalid">
+          User type is required
+        </div>
+      </div>
+      <div class="user-form__group">
+        <label for="password" class="user-form__label">Password*</label>
+        <div class="position-relative">
+          <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="user-form__input"
+                  ng-class="{'input-error': userForm.password.$invalid && userForm.password.$touched}"
+                  ng-model="user.password"
+                  required
+                  ng-minlength="8"
+                  user-form-validation>
+          <i class="error-icon" ng-if="userForm.password.$invalid && userForm.password.$touched">!</i>
+        </div>
+        <div class="error-message" ng-if="userForm.password.$touched && userForm.password.$invalid">
+          Password must be at least 8 characters with at least one number and one letter
+        </div>
+      </div>
+      <div class="user-form__group">
+        <label for="repeat_password" class="user-form__label">Repeat password*</label>
+        <div class="position-relative">
+          <input
+                  type="password"
+                  id="repeat_password"
+                  name="repeat_password"
+                  class="user-form__input"
+                  ng-model="repeat_password"
+                  required
+                  password-match="user.password"
+                  user-form-validation>
+          <i class="error-icon" ng-if="userForm.repeat_password.$invalid && userForm.repeat_password.$touched">!</i>
+        </div>
+        <div class="error-message" ng-if="userForm.repeat_password.$touched && userForm.repeat_password.$invalid">
+          <span ng-if="userForm.repeat_password.$error.required">Repeat password is required</span>
+          <span ng-if="userForm.repeat_password.$error.passwordMatch">Passwords do not match</span>
+        </div>
+      </div>
+      <div class="user-form__actions">
+        <button type="submit" class="btn btn--primary" ng-disabled="userForm.$invalid">
+          {{modalMode === 'create' ? 'Create' : 'Update'}}
+        </button>
+        <button type="button" class="btn btn--secondary" ng-click="closeModal()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
